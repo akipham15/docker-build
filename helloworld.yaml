@@ -23,8 +23,8 @@ spec:
     - name: hello-script
       container:
         image: khanhph/helloscript:latest
-        command: ['ls', '-lah']
-        # args: ["khanhph4xx"]
+        command: ['python', 'main.py']
+        args: ["khanhph4xx"]
         volumeMounts:                     # same syntax as k8s Pod spec
         - name: workdir
           mountPath: /home/khanhph4/docker/docker-build
