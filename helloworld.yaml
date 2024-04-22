@@ -10,7 +10,6 @@ metadata:
       This is a simple hello world example.
 spec:
   entrypoint: hello-script
-  serviceAccountName: argotest
   templates:
     - name: hello-script
       container:
