@@ -16,3 +16,7 @@ spec:
         image: khanhph/helloscript:latest
         command: [main]
         args: ["khanhph4xx"]
+        volumeMounts:                     # same syntax as k8s Pod spec
+        - name: workdir
+          mountPath: /home/khanhph4/docker/docker-build
+
