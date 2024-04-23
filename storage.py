@@ -19,8 +19,8 @@ def main():
     # and secret key.
     client = Minio(
         "118.70.7.162:9000",
-        access_key="er9h7SLYYRwWaJzqaYQJ",
-        secret_key="m6mKWYkF6k07mxjGtpmeSRFgttHV3cyO6yRzI2NP",
+        access_key="moJSJRhmbla3ULg9",
+        secret_key="rnjqicMCH3P6YxUdZm45fzEmXPtpXNQR",
     )
 
     if not os.path.exists("/tmp"):
