@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 logzero = "*"
+minio = "*"
 
 [dev-packages]
 
