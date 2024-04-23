@@ -47,10 +47,10 @@ spec:
     app: minio
   ports:
     - name: "ui-address"
-      port: 9900
+      port: 9000
       targetPort: 9000
       protocol: TCP
     - name: "console-address"
-      port: 9901
+      port: 9001
       targetPort: 9001
       protocol: TCP
