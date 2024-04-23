@@ -1,6 +1,7 @@
 # file_uploader.py MinIO Python SDK example
 
 from logzero import logger
+import os
 import sys
 from minio import Minio
 from minio.error import S3Error
@@ -22,11 +23,13 @@ def main():
         secret_key="m6mKWYkF6k07mxjGtpmeSRFgttHV3cyO6yRzI2NP",
     )
 
-    with open("/tmp/test-file.txt", "w") as f:
-        f.write(f"Hello World, {arg}!\n")
+    if not os.path.exists("/tmp"):
+        os.mkdir("/tmp")
 
-    # The file to upload, change this path if needed
     source_file = "/tmp/test-file.txt"
+
+    with open(source_file, "w") as f:
+        f.write(f"Hello World, {arg}!\n")
 
     # The destination bucket and filename on the MinIO server
     bucket_name = "locals3"
