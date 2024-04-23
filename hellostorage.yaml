@@ -9,7 +9,7 @@ metadata:
     workflows.argoproj.io/description: |
       This is a simple hello world example.
 spec:
-  entrypoint: hello-script
+  entrypoint: storage-script
   volumeClaimTemplates:                 # define volume, same syntax as k8s Pod spec
   - metadata:
       name: workdir                     # name of volume claim
