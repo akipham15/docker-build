@@ -1,0 +1,31 @@
+# https://github.com/docker/whalesay/tree/master
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  name: hello-world-script
+  labels:
+    workflows.argoproj.io/archive-strategy: "false"
+  annotations:
+    workflows.argoproj.io/description: |
+      This is a simple hello world example.
+spec:
+  entrypoint: hello-script
+  volumeClaimTemplates:                 # define volume, same syntax as k8s Pod spec
+  - metadata:
+      name: workdir                     # name of volume claim
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi                  # Gi => 1024 * 1024 * 1024
+
+  templates:
+    - name: storage-script
+      container:
+        image: khanhph/storagescript:latest
+        command: ['python', 'storage.py']
+        args: ["khanhph4xx"]
+        volumeMounts:                     # same syntax as k8s Pod spec
+        - name: workdir
+          mountPath: /home/khanhph4/docker/docker-build
+
