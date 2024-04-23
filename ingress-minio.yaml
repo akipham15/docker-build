@@ -14,6 +14,6 @@ spec:
               service:
                 name: minio-service
                 port:
-                  number: 9000
+                  number: 9900
             path: /minio(/|$)(.*)
             pathType: Prefix
