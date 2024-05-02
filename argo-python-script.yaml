@@ -1,0 +1,47 @@
+kind: Workflow  
+metadata:  
+  generateName: pass-artifact
+  namespace: argo  
+spec:  
+  entrypoint: steps  
+  serviceAccountName: argo  
+  templates:  
+
+    - name: python-random  
+      outputs:  
+        artifacts:  
+          - name: output  
+            path: /tmp/random.txt  
+            archive:  
+              none: { }  
+      container:  
+        name: random_number  
+        image: 'ericgoebelbecker/random_number:latest'  
+        command: [ "python3", "/app/save_random.py" ]  
+
+    - name: python-diff  
+      inputs:  
+        artifacts:  
+          - name: input  
+            path: /tmp/random.txt  
+      outputs:  
+        artifacts:  
+          - name: output  
+            path: /tmp/result.txt  
+            archive:  
+              none: { }  
+      container:  
+        name: python-diff  
+        image: 'ericgoebelbecker/difference:latest'  
+        command: [ "python3", "/app/difference.py" ]  
+
+    - name: steps  
+      steps:  
+        - - name: python-random  
+            template: python-random  
+        - - name: python-diff  
+            template: python-diff  
+            arguments:  
+              artifacts:  
+                - name: input  
+                  from: "{{steps.python-random.outputs.artifacts.output}}"

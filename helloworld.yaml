@@ -9,7 +9,7 @@ metadata:
     workflows.argoproj.io/description: |
       This is a simple hello world example.
 spec:
-  entrypoint: hello-script
+  entrypoint: helloscript
   volumeClaimTemplates:                 # define volume, same syntax as k8s Pod spec
   - metadata:
       name: workdir                     # name of volume claim
@@ -20,12 +20,16 @@ spec:
           storage: 1Gi                  # Gi => 1024 * 1024 * 1024
 
   templates:
-    - name: hello-script
+    - name: helloscript
+      outputs:  
+        artifacts:  
+          - name: output  
+            path: /tmp/helloxxx.txt  
+            archive:  
+              none: { }  
       container:
+        name: random_number  
         image: khanhph/helloscript:latest
-        command: ['python', 'main.py']
         args: ["khanhph4xx"]
-        volumeMounts:                     # same syntax as k8s Pod spec
-        - name: workdir
-          mountPath: /home/khanhph4/docker/docker-build
+        command: ['python', 'main.py']
 
