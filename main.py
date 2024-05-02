@@ -11,7 +11,7 @@ else:
 
 
 def main():
-    with open("helloxxx.txt", "w+") as f:
+    with open("helloxxx.txt", "w") as f:
         f.write(f"Hello World, {arg}!\n")
 
 if __name__ == "__main__":
