@@ -10,7 +10,7 @@ metadata:
 data:
   default-v1-s3-artifact-repository: |
     s3:
-      endpoint: minio-service:9000
+      endpoint: minio:9000
       bucket: argo-bucket
       accessKeySecret:
         key: access-key
