@@ -24,6 +24,7 @@ spec:
       outputs:  
         artifacts:  
           - name: output  
+            path: /tmp/helloxxx.txt
             archive:  
               none: { }  
       container:
