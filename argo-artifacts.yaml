@@ -13,9 +13,9 @@ data:
       endpoint: minio:9000
       bucket: argo-bucket
       accessKeySecret:
-        key: access-key
-        name: local-minio-cred
+        key: accesskey
+        name: argo-artifacts
       secretKeySecret:
-        key: secret-key
-        name: local-minio-cred
+        key: secretkey
+        name: argo-artifacts
       insecure: true
