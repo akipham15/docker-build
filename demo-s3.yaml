@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: output-artifact-s3
+spec:
+  entrypoint: whalesay
+  artifactRepositoryRef:
+    configMap: artifact-repositories # or any other ConfigMap
+    key: default-v1-s3-artifact-repository
+  templates:
+  - name: whalesay
+    container:
+      image: docker/whalesay:latest
+      command: [sh, -c]
+      args: ["cowsay hello world | tee /tmp/hello_world.txt"]
+    outputs:
+      artifacts:
+      - name: message
+        path: /tmp/hello_world.txt
+        archive:
+          none: {}
+        s3:
+          key: hello_world.txt
