@@ -21,6 +21,12 @@ spec:
 
   templates:
     - name: helloscript
+      env:
+      - name: FILE_SUFFIX
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+
       outputs:  
         artifacts:  
           - name: output  

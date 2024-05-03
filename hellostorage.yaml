@@ -10,22 +10,40 @@ metadata:
       This is a simple hello world example.
 spec:
   entrypoint: storage-script
-  volumeClaimTemplates:                 # define volume, same syntax as k8s Pod spec
-  - metadata:
-      name: workdir                     # name of volume claim
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 1Gi                  # Gi => 1024 * 1024 * 1024
+  arguments:
+    parameters:
+      - name: file-suffix
+        value: "khanhph4xx"
+
+  volumeClaimTemplates: # define volume, same syntax as k8s Pod spec
+    - metadata:
+        name: workdir # name of volume claim
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi # Gi => 1024 * 1024 * 1024
 
   templates:
     - name: storage-script
       container:
         image: khanhph/storagescript:latest
-        command: ['python', 'storage.py']
-        args: ["khanhph4xx"]
-        volumeMounts:                     # same syntax as k8s Pod spec
-        - name: workdir
-          mountPath: /home/khanhph4/docker/docker-build
-
+        command: ["python", "storage.py"]
+        args: ["{{workflow.name}}"]
+        env:
+          - name: MINIO_URL
+            value: "minio:9000"
+          - name: MINIO_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: argo-artifacts
+                key: accesskey
+          - name: MINIO_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: argo-artifacts
+                key: secretkey
+          - name: MINIO_BUCKET_NAME
+            value: "argo-bucket"
+          - name: FILE_SUFFIX
+            value: "{{workflow.parameters.file-suffix}}"

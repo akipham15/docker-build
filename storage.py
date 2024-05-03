@@ -14,48 +14,38 @@ else:
     logger.info("This is a simple helloworld! You did not pass an arg")
 
 
+def upload_file_to_minio(minio_client, bucket_name, object_name, file_path):
+    try:
+        minio_client.fput_object(bucket_name, object_name, file_path)
+        print(f"File {file_path} uploaded as {object_name} to bucket {bucket_name}.")
+    except S3Error as e:
+        print(f"Error uploading file: {e}")
+
+
 def main():
+    minio_url = os.getenv("MINIO_URL")  # Example: "minio-server:9000"
+    access_key = os.getenv("MINIO_ACCESS_KEY")
+    secret_key = os.getenv("MINIO_SECRET_KEY")
+    bucket_name = os.getenv("MINIO_BUCKET_NAME")
+    file_suffix = os.getenv("FILE_SUFFIX", "default")
+
     # Create a client with the MinIO server playground, its access key
     # and secret key.
-    client = Minio(
-        "118.70.7.162:9000",
-        access_key="moJSJRhmbla3ULg9",
-        secret_key="rnjqicMCH3P6YxUdZm45fzEmXPtpXNQR",
-    )
+    minio_client = Minio(
+        minio_url, access_key=access_key, secret_key=secret_key, secure=False
+    )  # Set to True if using HTTPS
+
+    file_path = f"/tmp/hello{file_suffix}.txt"
+    object_name = os.path.basename(file_path)
 
     if not os.path.exists("/tmp"):
         os.mkdir("/tmp")
 
-    source_file = "/tmp/test-file.txt"
-
-    with open(source_file, "w") as f:
+    with open(file_path, "w") as f:
         f.write(f"Hello World, {arg}!\n")
 
-    # The destination bucket and filename on the MinIO server
-    bucket_name = "locals3"
-    destination_file = "my-test-file.txt"
-
-    # Make the bucket if it doesn't exist.
-    found = client.bucket_exists(bucket_name)
-    if not found:
-        client.make_bucket(bucket_name)
-        print("Created bucket", bucket_name)
-    else:
-        print("Bucket", bucket_name, "already exists")
-
-    # Upload the file, renaming it in the process
-    client.fput_object(
-        bucket_name,
-        destination_file,
-        source_file,
-    )
-    print(
-        source_file,
-        "successfully uploaded as object",
-        destination_file,
-        "to bucket",
-        bucket_name,
-    )
+    # Upload to MinIO
+    upload_file_to_minio(minio_client, bucket_name, object_name, file_path)
 
 
 if __name__ == "__main__":
