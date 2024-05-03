@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: CronWorkflow
+metadata:
+  name: test-cron-wf
+spec:
+  schedule: "* * * * *"
+  concurrencyPolicy: "Replace"
+  startingDeadlineSeconds: 0
+  workflowSpec:
+    templates:
+    - name: whalesay
+      container:
+        image: alpine:3.6
+        command: [sh, -c]
+        args: ["date; sleep 90"]
+    - name: storage-script
+      container:
+        image: khanhph/storagescript:latest
+        command: ["python", "storage.py"]
+        args: ["{{workflow.name}}"]
+        env:
+          - name: MINIO_URL
+            value: "minio:9000"
+          - name: MINIO_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: argo-artifacts
+                key: accesskey
+          - name: MINIO_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: argo-artifacts
+                key: secretkey
+          - name: MINIO_BUCKET_NAME
+            value: "argo-bucket"
+          - name: FILE_SUFFIX
+            value: "{{workflow.parameters.file-suffix}}"
+
