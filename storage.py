@@ -31,9 +31,16 @@ def main():
 
     # Create a client with the MinIO server playground, its access key
     # and secret key.
+    logger.info(minio_url)
+    logger.info(access_key)
+    logger.info(secret_key)
+    logger.info(bucket_name)
+    logger.info(file_suffix)
+
     minio_client = Minio(
         minio_url, access_key=access_key, secret_key=secret_key, secure=False
     )  # Set to True if using HTTPS
+    minio_client.timeout = 30
 
     file_path = f"/tmp/hello{file_suffix}.txt"
     object_name = os.path.basename(file_path)
