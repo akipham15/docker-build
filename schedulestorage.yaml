@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: CronWorkflow
+metadata:
+  name: hello-world
+spec:
+  schedule: "* * * * *"
+  startingDeadlineSeconds: 0
+  concurrencyPolicy: "Replace"      # Default to "Allow"
+  successfulJobsHistoryLimit: 4     # Default 3
+  failedJobsHistoryLimit: 4         # Default 1
+  suspend: false                    # Set to "true" to suspend scheduling
+  workflowSpec:
+    entrypoint: whalesay
+    templates:
+      - name: whalesay
+        container:
+          image: docker/whalesay:latest
+          command: [cowsay]
+          args: ["🕓 hello world. Scheduled on: {{workflow.scheduledTime}}"]
+      - name: storage-script
+        container:
+          image: khanhph/storagescript:latest
+          command: ["python", "storage.py"]
+          args: ["{{workflow.name}}"]
+          env:
+            - name: MINIO_URL
+              value: "minio:9000"
+            - name: MINIO_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: argo-artifacts
+                  key: accesskey
+            - name: MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: argo-artifacts
+                  key: secretkey
+            - name: MINIO_BUCKET_NAME
+              value: "argo-bucket"
+            - name: FILE_SUFFIX
+              value: "{{workflow.parameters.file-suffix}}"
