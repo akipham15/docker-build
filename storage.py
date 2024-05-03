@@ -5,7 +5,7 @@ import os
 import sys
 from minio import Minio
 from minio.error import S3Error
-from datetime import date
+from datetime import datetime
 
 if len(sys.argv) > 1:
     arg = sys.argv[1]
@@ -38,15 +38,16 @@ def main():
     logger.info(bucket_name)
     logger.info(file_suffix)
 
+    dt_string = datetime.now().strftime("%d_%m_%Y_%H_%M_%S")
+    logger.info(f"Today's date: {dt_string}")
+
     minio_client = Minio(
         minio_url, access_key=access_key, secret_key=secret_key, secure=False
     )  # Set to True if using HTTPS
     minio_client.timeout = 30
 
-    today = date.today()
-    logger.info("Today's date:", today)
 
-    file_path = f"/tmp/hello-{today}.txt"
+    file_path = f"/tmp/hello-{dt_string}.txt"
     object_name = os.path.basename(file_path)
 
     if not os.path.exists("/tmp"):
