@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: CronWorkflow
 metadata:
-  name: hello-world
+  name: storage-schedule
 spec:
   schedule: "* * * * *"
   startingDeadlineSeconds: 0
