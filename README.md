@@ -14,6 +14,8 @@ argo submit -n argo hellostorage.yaml
 
 
 # cron workflow
+https://argo-workflows.readthedocs.io/en/latest/fields/#cronworkflow
+
 argo cron create cron.yaml
 
 ```
